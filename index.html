@@ -1,205 +1,782 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>smartketchup | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaithanya Velpula | Portfolio</title>
+  <style>
+    :root {
+      --bg:#ffffff;
+      --surface:#f8fafc;
+      --surface-2:#eef2f7;
+      --card:#ffffff;
+      --border:#dbe3ee;
+      --text:#111827;
+      --muted:#4b5563;
+      --primary:#2563eb;
+      --accent:#7c3aed;
+      --chip:#f2f6fb;
+      --success-bg:#ecfdf3;
+      --success-border:#86efac;
+      --success-text:#166534;
+      --shadow:0 8px 0 rgba(15, 23, 42, .08);
+      --shadow-hover:0 10px 0 rgba(15, 23, 42, .14);
+      --glow:0 0 0 rgba(37, 99, 235, 0);
+    }
+
+    body.dark {
+      --bg:#140d07;
+      --surface:#1b120a;
+      --surface-2:#25170d;
+      --card:#21150c;
+      --border:#8a5a2a;
+      --text:#ffd58a;
+      --muted:#d2ab6d;
+      --primary:#ff9f1c;
+      --accent:#ff4d6d;
+      --chip:#2a1a0f;
+      --success-bg:#2c220e;
+      --success-border:#ffbe55;
+      --success-text:#ffd58a;
+      --shadow:0 8px 0 rgba(0, 0, 0, .22);
+      --shadow-hover:0 10px 0 rgba(0, 0, 0, .28);
+      --glow:0 0 0 rgba(110, 168, 254, 0);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Courier New", Consolas, monospace;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+      text-shadow: none;
+    }
+
+    body.dark {
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
+        radial-gradient(circle at 20% -20%, color-mix(in srgb, var(--primary) 24%, transparent), transparent 40%),
+        var(--bg);
+      text-shadow: 0 0 0.5px color-mix(in srgb, var(--text) 45%, transparent);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.02) 0px,
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      opacity: 0;
+    }
+
+    body.dark::before {
+      opacity: .18;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0;
+      z-index: 200;
+      background: repeating-linear-gradient(90deg, var(--primary) 0 8px, var(--accent) 8px 16px);
+      transition: width .1s linear;
+      box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 60%, transparent);
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: .08;
+      animation: none;
+    }
+    .bg-orb.one {
+      width: 260px;
+      height: 260px;
+      top: 80px;
+      right: -80px;
+      background: #60a5fa;
+    }
+    .bg-orb.two {
+      width: 220px;
+      height: 220px;
+      bottom: 40px;
+      left: -90px;
+      background: #a78bfa;
+      animation-duration: 14s;
+      animation-delay: -3s;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(0, -14px, 0) scale(1.06); }
+    }
+
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--border);
+      border-top: 2px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-inner {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: .2px;
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform .18s ease;
+    }
+
+    .brand:hover { transform: translateY(-1px); }
+
+    .brand span { color: var(--primary); }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link-btn {
+      border: 0;
+      appearance: none;
+      background: transparent;
+      color: var(--text);
+      opacity: .86;
+      font: inherit;
+      font-weight: 600;
+      padding: 8px 11px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background .2s ease, opacity .2s ease, transform .2s ease;
+    }
+
+    .nav-link-btn:hover,
+    .nav-link-btn:focus-visible,
+    .nav-link-btn.active {
+      opacity: 1;
+      background: color-mix(in srgb, var(--primary) 22%, transparent);
+      transform: translateY(-1px);
+    }
+
+    .toggle {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 2px;
+      padding: 8px 11px;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px color-mix(in srgb, var(--primary) 24%, transparent);
+    }
+
+    main { padding: clamp(24px,4vw,34px) 0 clamp(50px,8vw,78px); }
+
+    .section {
+      margin-bottom: 28px;
+      scroll-margin-top: 86px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.45fr .9fr;
+      gap: 16px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+
+    .card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 2px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, color-mix(in srgb, var(--primary) 12%, transparent) 45%, transparent 85%);
+      transform: translateX(-110%);
+      transition: transform .55s ease;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
+    }
+
+    .card:hover::before { transform: translateX(110%); }
+
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--success-border);
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-radius: 2px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 12px 0 10px; line-height: 1.15; font-size: clamp(2.1rem,3.8vw,3.2rem); }
+    h2 { margin: 0 0 12px; font-size: 1.55rem; }
+    h3 { margin: 0 0 8px; }
+    p { margin: 0; }
+    .muted { color: var(--muted); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--chip);
+      padding: 7px 10px;
+      border-radius: 2px;
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 600;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+    }
+
+    .actions,
+    .project-actions {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .btn,
+    .project-link {
+      text-decoration: none;
+      border-radius: 2px;
+      text-align: center;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      color: var(--text);
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
+      flex: 1 1 170px;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after,
+    .project-link::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transform: skewX(-20deg);
+      transition: left .55s ease;
+      pointer-events: none;
+    }
+
+    .btn:hover::after,
+    .project-link:hover::after {
+      left: 135%;
+    }
+
+    .btn.primary {
+      border-color: transparent;
+      color: #fff;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .btn:hover,
+    .project-link:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--primary) 36%, var(--border));
+      box-shadow: 0 8px 18px color-mix(in srgb, var(--primary) 18%, transparent);
+    }
+
+    .stats {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .stats li {
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 68%, transparent);
+      border-radius: 2px;
+      padding: 12px;
+    }
+
+    .stats small { display: block; color: var(--muted); }
+
+    .timeline { display: grid; gap: 14px; }
+    .timeline .card { border-left: 4px solid color-mix(in srgb, var(--primary) 70%, var(--border)); }
+    .period { color: var(--muted); font-weight: 600; margin-bottom: 9px; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 5px 0; color: var(--muted); }
+
+    .exp-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+
+    .exp-badge {
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
+      color: var(--text);
+      border-radius: 2px;
+      padding: 6px 10px;
+      font-size: .84rem;
+      font-weight: 700;
+    }
+
+    .exp-project {
+      border: 1px dashed color-mix(in srgb, var(--border) 85%, transparent);
+      background: color-mix(in srgb, var(--surface-2) 40%, transparent);
+      border-radius: 2px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .exp-project h4 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .exp-project ul { margin: 0; }
+
+    .contact-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+
+    .contact-grid a {
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
+      border-radius: 2px;
+      padding: 14px;
+      font-weight: 600;
+      word-break: break-word;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .contact-grid a:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+      box-shadow: 0 10px 20px color-mix(in srgb, var(--primary) 15%, transparent);
+    }
+
+    .contact-grid a strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 10px;
+      font-size: .92rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px) scale(.985);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .scroll-top {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 120;
+      width: 42px;
+      height: 42px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 95%, transparent);
+      color: var(--text);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease, box-shadow .2s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .scroll-top.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .scroll-top:hover {
+      box-shadow: 0 10px 18px color-mix(in srgb, var(--primary) 20%, transparent);
+    }
+
+    @media (max-width: 980px) {
+      .hero, .grid-2, .contact-grid { grid-template-columns: 1fr; }
+      .nav-inner { padding: 10px 0; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(1120px, 95%); }
+      h1 { font-size: clamp(1.75rem, 8vw, 2.35rem); }
+      .btn, .project-link { width: 100%; flex-basis: 100%; }
+    }
+  </style>
 </head>
-
-<body>
-
-    <div class="container">
-
-        <h1>smartketchup</h1>
-        <p class="tagline">AI Engineer | Generative AI | AI Agents</p>
-
-        <section>
-            <h2>About Me</h2>
-            <p>
-                M.Tech in Artificial Intelligence from IISc Bangalore.
-                Passionate about AI Agents, LLMs, Reinforcement Learning,
-                NLP, Deep Learning, and scalable AI systems.
-            </p>
-        </section>
-
-        <section>
-            <h2>Skills</h2>
-
-            <ul>
-                <li>Python</li>
-                <li>PyTorch</li>
-                <li>Transformers</li>
-                <li>LangChain</li>
-                <li>LangGraph</li>
-                <li>Streamlit</li>
-                <li>Docker</li>
-                <li>AWS</li>
-                <li>Playwright</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Projects</h2>
-
-            <div class="card">
-                <h3>AI Job Application Agent</h3>
-                <p>
-                    Autonomous AI agent that searches and applies for jobs
-                    using LangGraph and Playwright.
-                </p>
-            </div>
-
-            <div class="card">
-                <h3>GPT-2 From Scratch</h3>
-                <p>
-                    Implemented and trained GPT-2 using PyTorch and DDP
-                    on large-scale datasets.
-                </p>
-            </div>
-
-            <div class="card">
-                <h3>English to Kannada Transformer</h3>
-                <p>
-                    Built Transformer model from scratch for machine translation.
-                </p>
-            </div>
-
-            <div class="card">
-                <h3>Risk Sensitive Reinforcement Learning</h3>
-                <p>
-                    Research project on CVaR and entropic risk optimization.
-                </p>
-            </div>
-        </section>
-
-        <section>
-            <h2>Experience</h2>
-
-            <div class="card">
-                <h3>AI Engineer</h3>
-                <p>Working on AI agents, LLM systems, and Generative AI applications.</p>
-            </div>
-
-            <div class="card">
-                <h3>Teaching Assistant — IISc</h3>
-                <p>Teaching Assistant for Data Structures and Algorithms.</p>
-            </div>
-        </section>
-
-        <section>
-            <h2>Contact</h2>
-
-            <p>GitHub: https://github.com/USERNAME</p>
-            <p>LinkedIn: https://linkedin.com/in/USERNAME</p>
-            <p>Email: yourmail@gmail.com</p>
-        </section>
-
+<body class="light">
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="bg-orb one"></div>
+  <div class="bg-orb two"></div>
+  <header class="nav">
+    <div class="container nav-inner">
+      <nav class="nav-links">
+        <button class="nav-link-btn" type="button" data-target="home">Home</button>
+        <button class="nav-link-btn" type="button" data-target="experience">Experience</button>
+        <button class="nav-link-btn" type="button" data-target="projects">Projects</button>
+        <button class="nav-link-btn" type="button" data-target="contact">Contact</button>
+      </nav>
+      <button id="themeToggle" class="toggle" type="button">☀️</button>
     </div>
+  </header>
 
-</body>
+  <button id="scrollTopBtn" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
 
-</html><!DOCTYPE html>
-<html lang="en">
+  <main class="container">
+    <section id="home" class="section hero">
+      <article class="card reveal">
+        <span class="pill">Open to AI/ML opportunities</span>
+        <h1>Chaithanya Velpula</h1>
+        <p class="muted" style="font-size:1.04rem; margin-bottom:8px;">ML Engineer • LLMs • Reinforcement Learning</p>
+        <p class="muted">Building multilingual LLM voice agents, risk-sensitive RL systems, and scalable AI pipelines from research to production.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://drive.google.com/file/d/1lWzzsnCuhpS4hzjtN6xD_-9EwpgNglfs/view?usp=drive_link">View Resume</a>
+          <a class="btn jump-link" href="#projects" data-target="projects">See Projects</a>
+          <a class="btn jump-link" href="#contact" data-target="contact">Contact Me</a>
+        </div>
+        <div class="chips">
+          <span class="chip">Python</span>
+          <span class="chip">PyTorch</span>
+          <span class="chip">Transformers</span>
+          <span class="chip">LoRA</span>
+          <span class="chip">PPO / SAC</span>
+          <span class="chip">Distributed Training</span>
+        </div>
+      </article>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>smartketchup | Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+      <aside class="card reveal">
+        <h2>Snapshot</h2>
+        <ul class="stats">
+          <li><small>Primary Domain</small>ML / AI</li>
+          <li><small>Current Role</small>Applied Research Engineer</li>
+          <li><small>Focus Areas</small>LLMs, RL, Voice Agents, Optimization</li>
+          <li><small>Location</small>India</li>
+        </ul>
+      </aside>
+    </section>
 
-<body>
+    <section class="section grid-2">
+      <article class="card reveal">
+        <h2>Education</h2>
+        <p><strong>IISc Bangalore</strong> — M.Tech AI (2023–2025), CGPA: 7.5</p>
+        <p class="muted" style="margin-top:10px;"><strong>JNTU Anantapur</strong> — B.Tech EEE (2018–2022), CGPA: 8.91</p>
+      </article>
 
-    <div class="container">
+      <article class="card reveal">
+        <h2>Core Skills</h2>
+        <p class="muted">Model optimization, LLM system building, efficient fine-tuning, quantization, RL experimentation, and production-ready inference workflows.</p>
+      </article>
+    </section>
 
-        <h1>smartketchup</h1>
-        <p class="tagline">AI Engineer | Generative AI | AI Agents</p>
+    <section id="experience" class="section">
+      <h2>Experience</h2>
+      <p class="muted" style="margin-bottom:12px;">Engineering and research contributions in applied LLM systems and reinforcement learning.</p>
+      <div class="timeline">
+        <article class="card reveal">
+          <h3>Skellam AI</h3>
+          <div class="exp-meta">
+            <span class="exp-badge">Applied Research Engineer</span>
+            <span class="exp-badge">July 2025 – Present</span>
+          </div>
 
-        <section>
-            <h2>About Me</h2>
-            <p>
-                M.Tech in Artificial Intelligence from IISc Bangalore.
-                Passionate about AI Agents, LLMs, Reinforcement Learning,
-                NLP, Deep Learning, and scalable AI systems.
-            </p>
-        </section>
-
-        <section>
-            <h2>Skills</h2>
-
+          <div class="exp-project">
+            <h4>Qubmind</h4>
             <ul>
-                <li>Python</li>
-                <li>PyTorch</li>
-                <li>Transformers</li>
-                <li>LangChain</li>
-                <li>LangGraph</li>
-                <li>Streamlit</li>
-                <li>Docker</li>
-                <li>AWS</li>
-                <li>Playwright</li>
+              <li>Developed ML/LLM features for intelligent application workflows.</li>
+              <li>Contributed to model experimentation, evaluation, and deployment-oriented improvements.</li>
+              <li>Focused on scalable pipelines and practical model optimization for real use cases.</li>
             </ul>
-        </section>
+          </div>
 
-        <section>
-            <h2>Projects</h2>
+          <div class="exp-project">
+            <h4>Qubvoice</h4>
+            <ul>
+              <li>Built and improved voice-first AI workflows using multilingual LLM pipelines.</li>
+              <li>Worked on production-ready inference and integration for conversational systems.</li>
+              <li>Improved response quality and reliability through prompt and pipeline optimization.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
 
-            <div class="card">
-                <h3>AI Job Application Agent</h3>
-                <p>
-                    Autonomous AI agent that searches and applies for jobs
-                    using LangGraph and Playwright.
-                </p>
-            </div>
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      <p class="muted" style="margin-bottom:12px;">Selected projects in RL, transformer systems, and efficient adaptation of large models.</p>
+      <div class="grid-2">
+        <article class="card reveal">
+          <h3>Risk-Sensitive RL (CARLA)</h3>
+          <p class="muted">Developed PPO/SAC variants with exponential utility to improve stability and reduce tail-risk (CVaR-oriented evaluation).</p>
+          <div class="project-actions">
+            <a class="project-link" href="https://github.com/chaithanyav01/llm_demo">GitHub</a>
+            <a class="project-link" href="https://sites.google.com/view/live%20link/home">Live Demo</a>
+          </div>
+        </article>
 
-            <div class="card">
-                <h3>GPT-2 From Scratch</h3>
-                <p>
-                    Implemented and trained GPT-2 using PyTorch and DDP
-                    on large-scale datasets.
-                </p>
-            </div>
+        <article class="card reveal">
+          <h3>GPT-2 from Scratch</h3>
+          <p class="muted">Implemented transformer architecture end-to-end and trained with DDP, reaching perplexity around 25.</p>
+          <div class="project-actions">
+            <a class="project-link" href="https://github.com/chaithanyav01/llm_demo">GitHub</a>
+            <a class="project-link" href="https://sites.google.com/view/live%20link/home">Live Demo</a>
+          </div>
+        </article>
 
-            <div class="card">
-                <h3>English to Kannada Transformer</h3>
-                <p>
-                    Built Transformer model from scratch for machine translation.
-                </p>
-            </div>
+        <article class="card reveal">
+          <h3>LLaMA Fine-Tuning (LoRA)</h3>
+          <p class="muted">Applied parameter-efficient tuning with LoRA and 4/8-bit quantization to reduce memory use and improve inference efficiency.</p>
+          <div class="project-actions">
+            <a class="project-link" href="https://github.com/chaithanyav01/llm_demo">GitHub</a>
+            <a class="project-link" href="https://sites.google.com/view/live%20link/home">Live Demo</a>
+          </div>
+        </article>
 
-            <div class="card">
-                <h3>Risk Sensitive Reinforcement Learning</h3>
-                <p>
-                    Research project on CVaR and entropic risk optimization.
-                </p>
-            </div>
-        </section>
+        <article class="card reveal">
+          <h3>ML Models from Scratch</h3>
+          <p class="muted">Built CNN, Transformer, SVM, and PCA implementations using NumPy/PyTorch to strengthen system-level understanding.</p>
+          <div class="project-actions">
+            <a class="project-link" href="https://github.com/chaithanyav01/llm_demo">GitHub</a>
+            <a class="project-link" href="https://sites.google.com/view/live%20link/home">Live Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-        <section>
-            <h2>Experience</h2>
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p class="muted" style="margin-bottom:12px;">Open to roles in ML engineering, LLM applications, and production AI systems.</p>
+      <section class="card reveal">
+        <div class="contact-grid">
+          <a href="mailto:velpulachaitu987@gmail.com">
+            <strong>Email</strong>
+            velpulachaitu987@gmail.com
+          </a>
+          <a href="tel:+916303512167">
+            <strong>Mobile</strong>
+            +91 6303512167
+          </a>
+          <a href="https://github.com/chaithanyav01">
+            <strong>GitHub</strong>
+            github.com/chaithanyav01
+          </a>
+          <a href="https://www.linkedin.com/in/chaithanyav09/">
+            <strong>LinkedIn</strong>
+            linkedin.com/in/chaithanyav09
+          </a>
+        </div>
+      </section>
+      <p class="footer">© Chaithanya Velpula</p>
+    </section>
+  </main>
 
-            <div class="card">
-                <h3>AI Engineer</h3>
-                <p>Working on AI agents, LLM systems, and Generative AI applications.</p>
-            </div>
+  <script>
+    (function () {
+      const key = "portfolio-theme";
+      const btn = document.getElementById("themeToggle");
+      const navButtons = document.querySelectorAll(".nav-link-btn");
+      const jumpLinks = document.querySelectorAll(".jump-link[data-target]");
+      const nav = document.querySelector(".nav");
+      const progressBar = document.getElementById("progressBar");
+      const revealItems = document.querySelectorAll(".reveal");
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      const orbOne = document.querySelector(".bg-orb.one");
+      const orbTwo = document.querySelector(".bg-orb.two");
 
-            <div class="card">
-                <h3>Teaching Assistant — IISc</h3>
-                <p>Teaching Assistant for Data Structures and Algorithms.</p>
-            </div>
-        </section>
+      function apply(mode) {
+        if (mode === "dark") {
+          document.body.classList.add("dark");
+          document.body.classList.remove("light");
+          btn.textContent = "☀️";
+        } else {
+          document.body.classList.add("light");
+          document.body.classList.remove("dark");
+          btn.textContent = "🌙";
+        }
+      }
 
-        <section>
-            <h2>Contact</h2>
+      function scrollToSection(id) {
+        const section = document.getElementById(id);
+        if (!section) return;
+        const navHeight = nav ? nav.offsetHeight : 0;
+        const y = section.getBoundingClientRect().top + window.pageYOffset - navHeight - 8;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
 
-            <p>GitHub: https://github.com/USERNAME</p>
-            <p>LinkedIn: https://linkedin.com/in/USERNAME</p>
-            <p>Email: yourmail@gmail.com</p>
-        </section>
+      function setActiveNav(id) {
+        navButtons.forEach(function (button) {
+          button.classList.toggle("active", button.getAttribute("data-target") === id);
+        });
+      }
 
-    </div>
+      function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + "%";
 
+        if (scrollTop > 380) scrollTopBtn.classList.add("show");
+        else scrollTopBtn.classList.remove("show");
+
+        if (orbOne) orbOne.style.transform = "translate3d(0," + (scrollTop * 0.06 * -1) + "px,0)";
+        if (orbTwo) orbTwo.style.transform = "translate3d(0," + (scrollTop * 0.04 * -1) + "px,0)";
+      }
+
+      apply("light");
+      setActiveNav("home");
+
+      btn.addEventListener("click", function () {
+        const next = document.body.classList.contains("dark") ? "light" : "dark";
+        localStorage.setItem(key, next);
+        apply(next);
+      });
+
+      scrollTopBtn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveNav("home");
+      });
+
+      navButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          const id = button.getAttribute("data-target");
+          setActiveNav(id);
+          scrollToSection(id);
+        });
+      });
+
+      jumpLinks.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          const id = link.getAttribute("data-target");
+          if (!id) return;
+          e.preventDefault();
+          setActiveNav(id);
+          scrollToSection(id);
+        });
+      });
+
+      const sections = ["home", "experience", "projects", "contact"].map(function (id) {
+        return document.getElementById(id);
+      }).filter(Boolean);
+
+      window.addEventListener("scroll", function () {
+        const navHeight = nav ? nav.offsetHeight : 0;
+        const checkY = window.scrollY + navHeight + 30;
+        let current = "home";
+        sections.forEach(function (section) {
+          if (section.offsetTop <= checkY) current = section.id;
+        });
+        setActiveNav(current);
+        updateProgress();
+      }, { passive: true });
+
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) entry.target.classList.add("show");
+        });
+      }, { threshold: 0.12 });
+
+      revealItems.forEach(function (el) { observer.observe(el); });
+      updateProgress();
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) {
+        revealItems.forEach(function (el) { el.classList.add("show"); });
+      }
+
+      const oldTitle = document.title;
+      window.addEventListener("blur", function () {
+        document.title = "[ RETRO PORTFOLIO ]";
+      });
+      window.addEventListener("focus", function () {
+        document.title = oldTitle;
+      });
+    })();
+  </script>
 </body>
-
 </html>
